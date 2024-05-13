@@ -1,0 +1,9 @@
+unstructured[pdf] 
+langchain 
+langchain_core 
+langchain_community 
+chromadb 
+tiktoken
+openai
+langchain-openai
+streamlit

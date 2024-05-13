@@ -1,0 +1,4 @@
+data/
+vectorstore/
+.python-version
+__pycache__/
