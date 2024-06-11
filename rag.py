@@ -16,7 +16,7 @@ import retriever_report
 
 import nltk
 
-nltk.download('all')
+nltk.download('averaged_perceptron_tagger')
 
 openai.api_key = st.secrets.openai_key
 os.environ['OPENAI_API_KEY'] = st.secrets.openai_key
@@ -33,8 +33,7 @@ This data is then augmented into an LLM generator for downstream tasks such as a
 
 #### Getting started 🛠️
 
-1. To set up, please add your OpenAI's API key. 🔑 
-2. Type in a job description query. 💬
+Ask for profiles or resumes with specific skills, for eg, "Share profiles of HTML developers". 💬
 
 """
 
@@ -47,7 +46,7 @@ def clear_message():
 
 with st.sidebar:
     st.markdown("# Control Panel")
-    st.text_input("OpenAI's API Key", type="password", key="api_key")
+    # st.text_input("OpenAI's API Key", type="password", key="api_key")
     st.button("Clear conversation", on_click=clear_message)
 
 for message in st.session_state.chat_history:
