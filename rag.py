@@ -16,7 +16,7 @@ import retriever_report
 
 import nltk
 
-# nltk.download('averaged_perceptron_tagger')
+nltk.download('all')
 
 openai.api_key = st.secrets.openai_key
 os.environ['OPENAI_API_KEY'] = st.secrets.openai_key
