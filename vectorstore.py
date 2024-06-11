@@ -14,7 +14,7 @@ import nltk
 nltk.download('stopwords')
 nltk.download('wordnet')
 
-os.environ['OPENAI_API_KEY'] = 'sk-proj-umVEK0fHtLsR1ioKEzgRT3BlbkFJeIhMn9jMaqFJ65MliPis'
+os.environ['OPENAI_API_KEY'] = st.secrets.openai_key
 
 FAISS_PATH = "./vectorstore"
 
