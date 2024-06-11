@@ -14,8 +14,8 @@ import os
 import openai
 import retriever_report
 
-openai.api_key = st.secrets.openai_key
-os.environ['OPENAI_API_KEY'] = st.secrets.openai_key
+openai.api_key = 'sk-proj-umVEK0fHtLsR1ioKEzgRT3BlbkFJeIhMn9jMaqFJ65MliPis'
+os.environ['OPENAI_API_KEY'] = 'sk-proj-umVEK0fHtLsR1ioKEzgRT3BlbkFJeIhMn9jMaqFJ65MliPis'
 
 st.header("Resume Screening GPT 💬 📚")
 
