@@ -8,4 +8,4 @@ openai
 langchain-openai
 streamlit
 llama_index
-faiss
+faiss-cpu
