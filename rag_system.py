@@ -1,8 +1,8 @@
 import sys
 sys.dont_write_bytecode = True
 from langchain_community.document_loaders import UnstructuredPDFLoader
-from langchain.retrievers import EnsembleRetriever
-from llama_index.retrievers.bm25 import BM25Retriever
+# from langchain.retrievers import EnsembleRetriever
+# from llama_index.retrievers.bm25 import BM25Retriever
 class RAGPipeline():
     def __init__(self, vectorstore_db):
         self.vectorstore = vectorstore_db
