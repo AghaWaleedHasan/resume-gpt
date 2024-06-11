@@ -8,8 +8,8 @@ def render(document_list: list, id_list: dict):
   retriever_message = st.expander(f"Click to see retriever's report 📄")
   with retriever_message:
     st.markdown("#### Retrieval results")
-    button_columns = st.columns([0.2, 0.2, 0.2, 0.2, 0.2], gap="small")
-    for index, document in enumerate(np.array(document_list)[:5]):
+    button_columns = st.columns([0.2] * len(document_list), gap="small")
+    for index, document in enumerate(np.array(document_list)):
       with button_columns[index], st.popover(f"Resume {index + 1}"):
         st.markdown(f"""
                     ### Applicant ID {list(id_list.keys())[index]}

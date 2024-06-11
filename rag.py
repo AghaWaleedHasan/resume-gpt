@@ -14,7 +14,6 @@ import os
 import openai
 import retriever_report
 
-
 openai.api_key = st.secrets.openai_key
 os.environ['OPENAI_API_KEY'] = st.secrets.openai_key
 
@@ -36,69 +35,60 @@ This data is then augmented into an LLM generator for downstream tasks such as a
 """
 
 if "chat_history" not in st.session_state:
-  st.session_state.chat_history = [AIMessage(content=welcome_message)]
+    st.session_state.chat_history = [AIMessage(content=welcome_message)]
 
 def clear_message():
-  st.session_state.resume_list = []
-  st.session_state.chat_history = [AIMessage(content=welcome_message)]
+    st.session_state.resume_list = []
+    st.session_state.chat_history = [AIMessage(content=welcome_message)]
 
 with st.sidebar:
-  st.markdown("# Control Panel")
+    st.markdown("# Control Panel")
+    st.text_input("OpenAI's API Key", type="password", key="api_key")
+    st.button("Clear conversation", on_click=clear_message)
 
-  st.text_input("OpenAI's API Key", type="password", key="api_key")
-#   st.text_input("GPT Model", "gpt-3.5-turbo-1106", key="gpt_selection")
-  st.button("Clear conversation", on_click=clear_message)
-  
 for message in st.session_state.chat_history:
-  if isinstance(message, HumanMessage):
-    with st.chat_message("Human"):
-      st.markdown(message.content)
-  else:
-    with st.chat_message("AI"):
-      if not isinstance(message, tuple):
-        st.markdown(message.content)
+    if isinstance(message, HumanMessage):
+        with st.chat_message("Human"):
+            st.markdown(message.content)
+    else:
+        with st.chat_message("AI"):
+            if not isinstance(message, tuple):
+                st.markdown(message.content)
 
 user_query = st.chat_input("Your message")
 
 if "rag_pipeline" not in st.session_state:
-  vectordb = FAISS.load_local("./vectorstore", OpenAIEmbeddings(), distance_strategy=DistanceStrategy.COSINE, allow_dangerous_deserialization=True)
-  st.session_state.rag_pipeline = RAGPipeline(vectordb)
+    vectordb = FAISS.load_local("./vectorstore", OpenAIEmbeddings(), distance_strategy=DistanceStrategy.COSINE, allow_dangerous_deserialization=True)
+    st.session_state.rag_pipeline = RAGPipeline(vectordb)
 
 if "resume_list" not in st.session_state:
-  st.session_state.resume_list = []
-
+    st.session_state.resume_list = []
 
 llm = ChatBot()
 
 if user_query is not None and user_query != "":
-  st.session_state.chat_history.append(HumanMessage(user_query))
-
-  with st.chat_message("Human"):
-    st.markdown(user_query)
-
-  rag_pipeline = st.session_state.rag_pipeline
-
-  with st.chat_message("AI"):
-    query_type = llm.query_classification(user_query)
-
-    if query_type == "1":
-      with st.spinner("Generating answers..."):
-        subquestion_list = llm.generate_subquestions(user_query)
-        id_list = rag_pipeline.retrieve_id_and_rerank(subquestion_list)
-        document_list = rag_pipeline.retrieve_documents_with_id(id_list)
-        st.session_state.resume_list = document_list
-        stream_message = llm.generate_message_stream(user_query, document_list, [], query_type)
-
-      response = st.write_stream(stream_message)
-
-      retriever_message = retriever_report
-      retriever_message.render(document_list, id_list)
-
-      st.session_state.chat_history.append(AIMessage(content=response))
-      st.session_state.chat_history.append((document_list, id_list))
-
-    else:
-      stream_message = llm.generate_message_stream(user_query, st.session_state.resume_list, st.session_state.chat_history, query_type)
-      response = st.write_stream(stream_message)
-
-      st.session_state.chat_history.append(AIMessage(content=response))
+    st.session_state.chat_history.append(HumanMessage(content=user_query))
+    with st.chat_message("Human"):
+        st.markdown(user_query)
+    
+    with st.chat_message("AI"):
+        classification = llm.query_classification(user_query)
+        if classification == "1":
+            with st.spinner("Generating Answers..."):
+                doc_id_with_score = st.session_state.rag_pipeline.retrieve_id_and_rerank(user_query)
+                # print("docs: ", doc_id_with_score)
+                if len(doc_id_with_score) == 0:
+                    response = "No relevant resumes found matching the given criteria."
+                else:
+                    retrieved_docs = st.session_state.rag_pipeline.retrieve_documents_with_id(doc_id_with_score)
+                    # print("retrieved docs: ", retrieved_docs)
+                    st.session_state.resume_list = retrieved_docs
+                    stream = llm.generate_message_stream(user_query, st.session_state.resume_list, st.session_state.chat_history, classification)
+                    response = st.write_stream(stream)
+                    retriever_message = retriever_report
+                    retriever_message.render(retrieved_docs, doc_id_with_score)
+                    st.session_state.chat_history.append(AIMessage(content=response))
+        else:
+            stream_message = llm.generate_message_stream(user_query, st.session_state.resume_list, st.session_state.chat_history, classification)
+            response = st.write_stream(stream_message)
+            st.session_state.chat_history.append(AIMessage(content=response))
