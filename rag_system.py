@@ -1,5 +1,6 @@
 import sys
 sys.dont_write_bytecode = True
+import streamlit as st 
 from langchain_community.document_loaders import UnstructuredPDFLoader
 # from langchain.retrievers import EnsembleRetriever
 # from llama_index.retrievers.bm25 import BM25Retriever
@@ -13,6 +14,7 @@ class RAGPipeline():
         # print("\n\n\ndocs_score: ", docs_score)
         docs_score = {str(doc.metadata["source"]): 1-score for doc, score in docs_score}
         print("docs score:", docs_score)
+        st.write("docs score:", docs_score)
         # bm25_retriever = BM25Retriever.from_defaults(
         #     docstore=self.vectorstore, similarity_top_k=5
         # )

@@ -17,8 +17,6 @@ import retriever_report
 openai.api_key = st.secrets.openai_key
 os.environ['OPENAI_API_KEY'] = st.secrets.openai_key
 
-st.write('Something was executed.\n') 
-
 st.header("Resume Screening GPT 💬 📚")
 
 welcome_message = """
