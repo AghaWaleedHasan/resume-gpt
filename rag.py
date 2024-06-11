@@ -17,7 +17,7 @@ import retriever_report
 openai.api_key = st.secrets.openai_key
 os.environ['OPENAI_API_KEY'] = st.secrets.openai_key
 
-os.write(1,b'Something was executed.\n') 
+st.write('Something was executed.\n') 
 
 st.header("Resume Screening GPT 💬 📚")
 
@@ -78,12 +78,10 @@ if user_query is not None and user_query != "":
         if classification == "1":
             with st.spinner("Generating Answers..."):
                 doc_id_with_score = st.session_state.rag_pipeline.retrieve_id_and_rerank(user_query)
-                # print("docs: ", doc_id_with_score)
                 if len(doc_id_with_score) == 0:
                     response = "No relevant resumes found matching the given criteria."
                 else:
                     retrieved_docs = st.session_state.rag_pipeline.retrieve_documents_with_id(doc_id_with_score)
-                    # print("retrieved docs: ", retrieved_docs)
                     st.session_state.resume_list = retrieved_docs
                     stream = llm.generate_message_stream(user_query, st.session_state.resume_list, st.session_state.chat_history, classification)
                     response = st.write_stream(stream)
