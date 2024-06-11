@@ -37,7 +37,7 @@ class RAGPipeline():
         retrieved_documents = []
         for doc_path in retrieved_ids:
             print("docpath", "./"+doc_path)
-            loader = UnstructuredPDFLoader(doc_path, mode="single", strategy="fast")
+            loader = UnstructuredPDFLoader("./"+doc_path, mode="single", strategy="fast")
             retrieved_documents.extend(loader.load())
         for i in range(len(retrieved_documents)):
             retrieved_documents[i] = "Applicant File " + retrieved_ids[i] + "\n" + retrieved_documents[i].page_content
