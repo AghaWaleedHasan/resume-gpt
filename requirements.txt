@@ -13,3 +13,4 @@ opencv-python
 opencv-python-headless
 pathlib
 pdf2image
+nltk
