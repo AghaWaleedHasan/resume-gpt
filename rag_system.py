@@ -2,8 +2,15 @@ import sys
 sys.dont_write_bytecode = True
 import streamlit as st 
 from langchain_community.document_loaders import UnstructuredPDFLoader
+from llama_index.core import SimpleDirectoryReader
 # from langchain.retrievers import EnsembleRetriever
 # from llama_index.retrievers.bm25 import BM25Retriever
+
+from pathlib import Path
+
+# Get the current working directory
+current_directory = Path.cwd()
+
 class RAGPipeline():
     def __init__(self, vectorstore_db):
         self.vectorstore = vectorstore_db
@@ -36,10 +43,15 @@ class RAGPipeline():
     def retrieve_documents_with_id(self, doc_id_with_score: dict, threshold=5):
         retrieved_ids = list(sorted(doc_id_with_score, key=doc_id_with_score.get, reverse=True))[:threshold]
         retrieved_documents = []
+        # reader = SimpleDirectoryReader(input_files=retrieved_ids)
+        # print("reader data: ", reader.load_data(), "\n\n\n")
         for doc_path in retrieved_ids:
             # print("docpath", "./"+doc_path)
-            loader = UnstructuredPDFLoader(doc_path, mode="single")
+            doc_path = current_directory / doc_path
+            print(doc_path)
+            loader = UnstructuredPDFLoader(current_directory / doc_path, mode="single")
             retrieved_documents.extend(loader.load())
+        print("retrieved documents: ", retrieved_documents, "\n\n\n")
         for i in range(len(retrieved_documents)):
             retrieved_documents[i] = "Applicant File " + retrieved_ids[i] + "\n" + retrieved_documents[i].page_content
         return retrieved_documents

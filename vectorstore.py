@@ -31,7 +31,7 @@ def get_file_paths(directory):
     return file_paths
 
 # Specify the directory you want to search
-directory_to_search = './data'
+directory_to_search = 'data'
 
 # Get the list of file paths
 resume_paths = get_file_paths(directory_to_search)
