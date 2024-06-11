@@ -19,7 +19,6 @@ def render(document_list: list, id_list: dict):
         st.markdown(document)
     st.markdown(f"""
     #### Other information
-    - Top-k value: 5 resumes
     - Highest ranker score: {round(list(id_list.values())[0], 4)}
     - Lowest ranker score: {round(list(id_list.values())[-1], 4)}
     """)
