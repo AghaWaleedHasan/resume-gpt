@@ -92,3 +92,4 @@ if user_query is not None and user_query != "":
             stream_message = llm.generate_message_stream(user_query, st.session_state.resume_list, st.session_state.chat_history, classification)
             response = st.write_stream(stream_message)
             st.session_state.chat_history.append(AIMessage(content=response))
+
