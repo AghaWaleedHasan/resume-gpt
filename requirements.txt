@@ -10,3 +10,4 @@ streamlit
 llama_index
 faiss-cpu
 opencv-python
+opencv-python-headless
