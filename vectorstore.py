@@ -1,6 +1,6 @@
 import os
 import re
-from langchain_community.vectorstores import chroma
+from langchain_community.vectorstores import FAISS
 from langchain_community.vectorstores.faiss import DistanceStrategy
 from langchain_openai import OpenAIEmbeddings
 from langchain.text_splitter import RecursiveCharacterTextSplitter
@@ -31,7 +31,7 @@ def get_file_paths(directory):
     return file_paths
 
 # Specify the directory you want to search
-directory_to_search = 'data'
+directory_to_search = './data'
 
 # Get the list of file paths
 resume_paths = get_file_paths(directory_to_search)
@@ -70,8 +70,8 @@ text_splitter = RecursiveCharacterTextSplitter.from_tiktoken_encoder(
     chunk_overlap=32)
 splits = text_splitter.split_documents(documents)
 
-vectorstore = chroma.from_documents(documents=splits,
-                                   embedding=OpenAIEmbeddings(), distance_strategy=DistanceStrategy.COSINE)
+vectorstore = FAISS.from_documents(documents=splits,
+                                    embedding=OpenAIEmbeddings(), distance_strategy=DistanceStrategy.COSINE)
 
 vectorstore.save_local(FAISS_PATH)
 

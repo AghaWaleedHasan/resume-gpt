@@ -12,7 +12,7 @@ class RAGPipeline():
         docs_score = self.vectorstore.similarity_search_with_score(question, k=k)
         # print("\n\n\ndocs_score: ", docs_score)
         docs_score = {str(doc.metadata["source"]): 1-score for doc, score in docs_score}
-        # # print("docs score:", docs_score)
+        print("docs score:", docs_score)
         # bm25_retriever = BM25Retriever.from_defaults(
         #     docstore=self.vectorstore, similarity_top_k=5
         # )
@@ -36,8 +36,8 @@ class RAGPipeline():
         retrieved_ids = list(sorted(doc_id_with_score, key=doc_id_with_score.get, reverse=True))[:threshold]
         retrieved_documents = []
         for doc_path in retrieved_ids:
-            print("docpath", "./"+doc_path)
-            loader = UnstructuredPDFLoader("./"+doc_path, mode="single", strategy="fast")
+            # print("docpath", "./"+doc_path)
+            loader = UnstructuredPDFLoader(doc_path, mode="single", strategy="fast")
             retrieved_documents.extend(loader.load())
         for i in range(len(retrieved_documents)):
             retrieved_documents[i] = "Applicant File " + retrieved_ids[i] + "\n" + retrieved_documents[i].page_content
