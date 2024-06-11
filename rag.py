@@ -16,12 +16,7 @@ import retriever_report
 
 import nltk
 
-nltk_data_dir = "./resources/nltk_data/"
-if not os.path.exists(nltk_data_dir):
-    os.makedirs(nltk_data_dir, exist_ok=True)
-nltk.data.path.clear()
-nltk.data.path.append(nltk_data_dir)
-nltk.download("averaged_perceptron_tagger", download_dir=nltk_data_dir)
+# nltk.download('averaged_perceptron_tagger')
 
 openai.api_key = st.secrets.openai_key
 os.environ['OPENAI_API_KEY'] = st.secrets.openai_key
